@@ -1,8 +1,3 @@
-# Universal Windows Platform
-# Build a Universal Windows Platform project using Visual Studio.
-# Add steps that test and distribute an app, save build artifacts, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
@@ -10,10 +5,10 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'x86|x64|ARM'
+  solution: 'UWPApp/UWPApp.sln'   # <-- Change this
+  buildPlatform: 'x64'
   buildConfiguration: 'Release'
-  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+  appxPackageDir: '$(Build.ArtifactStagingDirectory)\AppxPackages\\'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -24,7 +19,16 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    platform: 'x64'
     solution: '$(solution)'
+    platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    msbuildArgs: >
+      /p:AppxBundlePlatforms="$(buildPlatform)"
+      /p:AppxPackageDir="$(appxPackageDir)"
+      /p:AppxBundle=Always
+      /p:UapAppxPackageBuildMode=StoreUpload
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'AppxPackage'
