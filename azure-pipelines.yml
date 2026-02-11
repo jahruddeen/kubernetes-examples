@@ -1,3 +1,7 @@
+# Universal Windows Platform
+# Build a Universal Windows Platform project using Visual Studio.
+# https://aka.ms/yaml
+
 trigger:
 - main
 
@@ -5,7 +9,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'UWPApp/UWPApp.sln'   # <-- Change this
+  solution: 'UWPApp/UWPApp.sln'   # <-- Change if needed
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   appxPackageDir: '$(Build.ArtifactStagingDirectory)\AppxPackages\\'
@@ -26,7 +30,7 @@ steps:
       /p:AppxBundlePlatforms="$(buildPlatform)"
       /p:AppxPackageDir="$(appxPackageDir)"
       /p:AppxBundle=Always
-      /p:UapAppxPackageBuildMode=StoreUpload
+      /p:UapAppxPackageBuildMode=StoreUpload"
 
 - task: PublishBuildArtifacts@1
   inputs:
